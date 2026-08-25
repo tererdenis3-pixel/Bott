@@ -1,0 +1,28 @@
+‎{
+‎  "name": "orange-money-loan",
+‎  "version": "1.0.0",
+‎  "description": "Orange Money Loan Application with Telegram Bot Integration",
+‎  "main": "server.js",
+‎  "type": "commonjs",
+‎  "engines": {
+‎    "node": "18.x"
+‎  },
+‎  "scripts": {
+‎    "start": "node server.js",
+‎    "dev": "node server.js"
+‎  },
+‎  "keywords": [
+‎    "orange-money",
+‎    "loan",
+‎    "telegram"
+‎  ],
+‎  "author": "",
+‎  "license": "ISC",
+‎  "dependencies": {
+‎    "express": "^4.18.2",
+‎    "cors": "^2.8.5",
+‎    "axios": "^1.6.0",
+‎    "dotenv": "^16.3.1",
+‎    "body-parser": "^1.20.2"
+‎  }
+‎}
