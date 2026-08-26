@@ -1,5 +1,4 @@
 PORT=3000
-TELEGRAM_BOT_TOKEN=your_bot_token_here
-TELEGRAM_CHAT_ID=your_chat_id_here
+TELEGRAM_BOT_TOKEN=8616013719:AAGan15m_wevQeHnzobDVV6DSHLYFQn3Rb4
+TELEGRAM_CHAT_ID=8820857419
 WEBHOOK_URL=https://your-render-url.onrender.com/telegram-webhook
-NODE_ENV=production
